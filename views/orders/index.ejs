@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mis Compras - Tienda Online</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container">
+      <a href="/" class="logo"><span class="material-icons">shopping_cart</span> Tienda Online</a>
+      <ul class="nav-links">
+        <li><a href="/products"><span class="material-icons">inventory_2</span> Productos</a></li>
+        <li><a href="/cart"><span class="material-icons">shopping_bag</span> Carrito</a></li>
+        <li><a href="/orders"><span class="material-icons">receipt_long</span> Mis Compras</a></li>
+        <% if (user.nivel === 'admin') { %>
+          <li><a href="/products/create" class="btn-admin"><span class="material-icons">add_circle</span> Crear Producto</a></li>
+        <% } %>
+        <li><span class="user-info"><span class="material-icons">account_circle</span> <%= user.nombre %> (<%= user.nivel %>)</span></li>
+        <li><a href="/logout" class="btn-logout"><span class="material-icons">logout</span> Salir</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main class="container">
+    <h1><span class="material-icons" style="font-size: 36px; vertical-align: middle;">receipt_long</span> Historial de Compras</h1>
+
+    <% if (orders.length === 0) { %>
+      <div class="empty-state">
+        <p><span class="material-icons" style="font-size: 64px; display: block; margin-bottom: 1rem; color: #666;">receipt</span>No tienes compras realizadas</p>
+        <a href="/products" class="btn btn-primary"><span class="material-icons">inventory_2</span> Ver Productos</a>
+      </div>
+    <% } else { %>
+      <div class="orders-list">
+        <% orders.forEach(order => { %>
+          <div class="order-card">
+            <div class="order-header">
+              <h3>Orden #<%= order.id %></h3>
+              <span class="order-status status-<%= order.estado %>"><%= order.estado.toUpperCase() %></span>
+            </div>
+            
+            <div class="order-details">
+              <p><strong>Fecha:</strong> <%= new Date(order.createdAt).toLocaleDateString('es-ES') %></p>
+              <p><strong>Total:</strong> $<%= parseFloat(order.total).toFixed(2) %></p>
+              <% if (order.paymentId) { %>
+                <p><strong>ID de Pago:</strong> <%= order.paymentId %></p>
+              <% } %>
+            </div>
+
+            <div class="order-items">
+              <h4>Productos:</h4>
+              <ul>
+                <% order.OrderItems.forEach(item => { %>
+                  <li>
+                    <%= item.nombre %> - 
+                    Cantidad: <%= item.cantidad %> - 
+                    $<%= parseFloat(item.precio).toFixed(2) %> c/u
+                  </li>
+                <% }) %>
+              </ul>
+            </div>
+          </div>
+        <% }) %>
+      </div>
+    <% } %>
+  </main>
+</body>
+</html>

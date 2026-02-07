@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= typeof title !== 'undefined' ? title : 'Tienda Online' %></title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container">
+      <a href="/" class="logo">🛒 Tienda Online</a>
+      <ul class="nav-links">
+        <% if (user) { %>
+          <li><a href="/products">Productos</a></li>
+          <li><a href="/cart">Carrito</a></li>
+          <li><a href="/orders">Mis Compras</a></li>
+          <% if (user.nivel === 'admin') { %>
+            <li><a href="/products/create" class="btn-admin">Crear Producto</a></li>
+          <% } %>
+          <li><span class="user-info">👤 <%= user.nombre %> (<%= user.nivel %>)</span></li>
+          <li><a href="/logout" class="btn-logout">Salir</a></li>
+        <% } else { %>
+          <li><a href="/login">Iniciar Sesión</a></li>
+          <li><a href="/register">Registrarse</a></li>
+        <% } %>
+      </ul>
+    </div>
+  </nav>
+
+  <main class="container">
+    <%- body %>
+  </main>
+
+  <footer class="footer">
+    <p>&copy; 2025 Tienda Online - Todos los derechos reservados</p>
+  </footer>
+</body>
+</html>

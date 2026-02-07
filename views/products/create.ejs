@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Crear Producto - Tienda Online</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container">
+      <a href="/" class="logo"><span class="material-icons">shopping_cart</span> Tienda Online</a>
+      <ul class="nav-links">
+        <li><a href="/products"><span class="material-icons">inventory_2</span> Productos</a></li>
+        <li><a href="/cart"><span class="material-icons">shopping_bag</span> Carrito</a></li>
+        <li><a href="/orders"><span class="material-icons">receipt_long</span> Mis Compras</a></li>
+        <li><a href="/products/create" class="btn-admin"><span class="material-icons">add_circle</span> Crear Producto</a></li>
+        <li><span class="user-info"><span class="material-icons">account_circle</span> <%= user.nombre %> (<%= user.nivel %>)</span></li>
+        <li><a href="/logout" class="btn-logout"><span class="material-icons">logout</span> Salir</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main class="container">
+    <div class="form-container">
+      <h1><span class="material-icons" style="font-size: 36px; vertical-align: middle;">add_box</span> Crear Nuevo Producto</h1>
+      
+      <% if (errors.length > 0) { %>
+        <div class="alert alert-error">
+          <ul>
+            <% errors.forEach(error => { %>
+              <li><%= error.msg %></li>
+            <% }) %>
+          </ul>
+        </div>
+      <% } %>
+
+      <form action="/products/create" method="POST" class="product-form" enctype="multipart/form-data">
+        <div class="form-group">
+          <label for="nombre">Nombre del Producto:</label>
+          <input type="text" id="nombre" name="nombre" value="<%= formData.nombre || '' %>" required>
+        </div>
+
+        <div class="form-group">
+          <label for="codigo">Código:</label>
+          <input type="text" id="codigo" name="codigo" value="<%= formData.codigo || '' %>" required>
+          <small>Código único del producto</small>
+        </div>
+
+        <div class="form-group">
+          <label for="precio">Precio:</label>
+          <input type="number" id="precio" name="precio" step="0.01" min="0.01" value="<%= formData.precio || '' %>" required>
+          <small>Debe ser mayor a 0</small>
+        </div>
+
+        <div class="form-group">
+          <label for="descripcion">Descripción:</label>
+          <textarea id="descripcion" name="descripcion" rows="4"><%= formData.descripcion || '' %></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="imagen"><span class="material-icons" style="vertical-align: middle;">image</span> Imagen del Producto:</label>
+          <input type="file" id="imagen" name="imagen" accept="image/jpeg,image/jpg,image/png,image/gif,image/webp">
+          <small>Selecciona una imagen desde tu galería (JPG, PNG, GIF, WEBP - máximo 5MB)</small>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary"><span class="material-icons">save</span> Crear Producto</button>
+          <a href="/products" class="btn btn-secondary"><span class="material-icons">cancel</span> Cancelar</a>
+        </div>
+      </form>
+    </div>
+  </main>
+</body>
+</html>

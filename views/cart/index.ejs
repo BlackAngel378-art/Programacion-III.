@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Carrito - Tienda Online</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container">
+      <a href="/" class="logo"><span class="material-icons">shopping_cart</span> Tienda Online</a>
+      <ul class="nav-links">
+        <li><a href="/products"><span class="material-icons">inventory_2</span> Productos</a></li>
+        <li><a href="/cart"><span class="material-icons">shopping_bag</span> Carrito</a></li>
+        <li><a href="/orders"><span class="material-icons">receipt_long</span> Mis Compras</a></li>
+        <% if (user.nivel === 'admin') { %>
+          <li><a href="/products/create" class="btn-admin"><span class="material-icons">add_circle</span> Crear Producto</a></li>
+        <% } %>
+        <li><span class="user-info"><span class="material-icons">account_circle</span> <%= user.nombre %> (<%= user.nivel %>)</span></li>
+        <li><a href="/logout" class="btn-logout"><span class="material-icons">logout</span> Salir</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main class="container">
+    <h1><span class="material-icons" style="font-size: 36px; vertical-align: middle;">shopping_bag</span> Mi Carrito de Compras</h1>
+
+    <% if (cartItems.length === 0) { %>
+      <div class="empty-state">
+        <p><span class="material-icons" style="font-size: 64px; display: block; margin-bottom: 1rem; color: #666;">shopping_cart</span>Tu carrito está vacío</p>
+        <a href="/products" class="btn btn-primary"><span class="material-icons">inventory_2</span> Ver Productos</a>
+      </div>
+    <% } else { %>
+      <div class="cart-container">
+        <table class="cart-table">
+          <thead>
+            <tr>
+              <th>Imagen</th>
+              <th>Producto</th>
+              <th>Código</th>
+              <th>Precio</th>
+              <th>Cantidad</th>
+              <th>Subtotal</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% cartItems.forEach(item => { %>
+              <tr>
+                <td>
+                  <img src="<%= item.Product.imagen || 'https://via.placeholder.com/80x80?text=Sin+Imagen' %>" 
+                       alt="<%= item.Product.nombre %>" 
+                       class="cart-product-image">
+                </td>
+                <td><%= item.Product.nombre %></td>
+                <td><%= item.Product.codigo %></td>
+                <td>$<%= parseFloat(item.Product.precio).toFixed(2) %></td>
+                <td><%= item.cantidad %></td>
+                <td>$<%= (parseFloat(item.Product.precio) * item.cantidad).toFixed(2) %></td>
+                <td>
+                  <form action="/cart/remove/<%= item.id %>?_method=DELETE" method="POST" style="display: inline;">
+                    <button type="submit" class="btn btn-danger btn-small"><span class="material-icons">delete</span></button>
+                  </form>
+                </td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+
+        <div class="cart-summary">
+          <div class="cart-total">
+            <h2>Total: $<%= total.toFixed(2) %></h2>
+          </div>
+          
+          <div class="cart-actions">
+            <form action="/cart/clear?_method=DELETE" method="POST" style="display: inline;">
+              <button type="submit" class="btn btn-secondary"><span class="material-icons">delete_sweep</span> Vaciar Carrito</button>
+            </form>
+            <form action="/orders/create" method="POST" style="display: inline;">
+              <button type="submit" class="btn btn-primary"><span class="material-icons">payment</span> Proceder al Pago</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    <% } %>
+  </main>
+</body>
+</html>

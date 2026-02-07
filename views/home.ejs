@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Inicio - Tienda Online</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container">
+      <a href="/" class="logo">
+        <span class="material-icons">shopping_cart</span>
+        Tienda Online
+      </a>
+      <ul class="nav-links">
+        <% if (user) { %>
+          <li><a href="/products"><span class="material-icons">inventory_2</span> Productos</a></li>
+          <li><a href="/cart"><span class="material-icons">shopping_bag</span> Carrito</a></li>
+          <li><a href="/orders"><span class="material-icons">receipt_long</span> Mis Compras</a></li>
+          <% if (user.nivel === 'admin') { %>
+            <li><a href="/products/create" class="btn-admin"><span class="material-icons">add_circle</span> Crear Producto</a></li>
+          <% } %>
+          <li><span class="user-info"><span class="material-icons">account_circle</span> <%= user.nombre %> (<%= user.nivel %>)</span></li>
+          <li><a href="/logout" class="btn-logout"><span class="material-icons">logout</span> Salir</a></li>
+        <% } else { %>
+          <li><a href="/login"><span class="material-icons">login</span> Iniciar Sesión</a></li>
+          <li><a href="/register"><span class="material-icons">person_add</span> Registrarse</a></li>
+        <% } %>
+      </ul>
+    </div>
+  </nav>
+
+  <main class="home-container">
+    <!-- Hero Section -->
+    <section class="hero-section">
+      <div class="hero-content">
+        <h1 class="hero-title">
+          <span class="material-icons hero-icon">storefront</span>
+          Bienvenido a Tienda Online
+        </h1>
+        <p class="hero-subtitle">La mejor selección de productos tecnológicos al mejor precio</p>
+        <div class="hero-actions">
+          <% if (user) { %>
+            <a href="/products" class="btn btn-primary btn-large">
+              <span class="material-icons">shopping_bag</span>
+              Ver Productos
+            </a>
+            <a href="/orders" class="btn btn-secondary btn-large">
+              <span class="material-icons">receipt_long</span>
+              Mis Compras
+            </a>
+          <% } else { %>
+            <a href="/register" class="btn btn-primary btn-large">
+              <span class="material-icons">person_add</span>
+              Registrarse
+            </a>
+            <a href="/login" class="btn btn-secondary btn-large">
+              <span class="material-icons">login</span>
+              Iniciar Sesión
+            </a>
+          <% } %>
+        </div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
