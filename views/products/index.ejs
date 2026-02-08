@@ -11,16 +11,23 @@
   <nav class="navbar">
     <div class="container">
       <a href="/" class="logo"><span class="material-icons">shopping_cart</span> Tienda Online</a>
-      <ul class="nav-links">
-        <li><a href="/products"><span class="material-icons">inventory_2</span> Productos</a></li>
-        <li><a href="/cart"><span class="material-icons">shopping_bag</span> Carrito</a></li>
-        <li><a href="/orders"><span class="material-icons">receipt_long</span> Mis Compras</a></li>
-        <% if (user.nivel === 'admin') { %>
-          <li><a href="/products/create" class="btn-admin"><span class="material-icons">add_circle</span> Crear Producto</a></li>
-        <% } %>
-        <li><span class="user-info"><span class="material-icons">account_circle</span> <%= user.nombre %> (<%= user.nivel %>)</span></li>
-        <li><a href="/logout" class="btn-logout"><span class="material-icons">logout</span> Salir</a></li>
-      </ul>
+      
+      <button class="mobile-menu-toggle" onclick="toggleMobileMenu()">
+        <span class="material-icons">menu</span>
+      </button>
+      
+      <div class="nav-wrapper">
+        <ul class="nav-links mobile-hidden" id="navLinks">
+          <li><a href="/products"><span class="material-icons">inventory_2</span> Productos</a></li>
+          <li><a href="/cart"><span class="material-icons">shopping_bag</span> Carrito</a></li>
+          <li><a href="/orders"><span class="material-icons">receipt_long</span> Mis Compras</a></li>
+          <% if (user.nivel === 'admin') { %>
+            <li><a href="/products/create" class="btn-admin"><span class="material-icons">add_circle</span> Crear Producto</a></li>
+          <% } %>
+          <li><span class="user-info"><span class="material-icons">account_circle</span> <%= user.nombre %> (<%= user.nivel %>)</span></li>
+          <li><a href="/logout" class="btn-logout"><span class="material-icons">logout</span> Salir</a></li>
+        </ul>
+      </div>
     </div>
   </nav>
 
@@ -49,6 +56,9 @@
                 <span class="product-price">$<%= parseFloat(product.precio).toFixed(2) %></span>
                 <div class="product-actions">
                   <a href="/products/<%= product.codigo %>" class="btn btn-secondary"><span class="material-icons">visibility</span> Ver Detalle</a>
+                  <% if (user.nivel === 'admin') { %>
+                    <a href="/products/<%= product.codigo %>/edit" class="btn btn-warning"><span class="material-icons">edit</span> Editar</a>
+                  <% } %>
                   <form action="/cart/add/<%= product.id %>" method="POST" style="display: inline;">
                     <input type="hidden" name="cantidad" value="1">
                     <button type="submit" class="btn btn-primary"><span class="material-icons">add_shopping_cart</span> Agregar</button>
@@ -61,5 +71,7 @@
       </div>
     <% } %>
   </main>
+
+  <script src="/js/mobile-menu.js"></script>
 </body>
 </html>

@@ -11,16 +11,23 @@
   <nav class="navbar">
     <div class="container">
       <a href="/" class="logo"><span class="material-icons">shopping_cart</span> Tienda Online</a>
-      <ul class="nav-links">
-        <li><a href="/products"><span class="material-icons">inventory_2</span> Productos</a></li>
-        <li><a href="/cart"><span class="material-icons">shopping_bag</span> Carrito</a></li>
-        <li><a href="/orders"><span class="material-icons">receipt_long</span> Mis Compras</a></li>
-        <% if (user.nivel === 'admin') { %>
-          <li><a href="/products/create" class="btn-admin"><span class="material-icons">add_circle</span> Crear Producto</a></li>
-        <% } %>
-        <li><span class="user-info"><span class="material-icons">account_circle</span> <%= user.nombre %> (<%= user.nivel %>)</span></li>
-        <li><a href="/logout" class="btn-logout"><span class="material-icons">logout</span> Salir</a></li>
-      </ul>
+      
+      <button class="mobile-menu-toggle" onclick="toggleMobileMenu()">
+        <span class="material-icons">menu</span>
+      </button>
+      
+      <div class="nav-wrapper">
+        <ul class="nav-links mobile-hidden" id="navLinks">
+          <li><a href="/products"><span class="material-icons">inventory_2</span> Productos</a></li>
+          <li><a href="/cart"><span class="material-icons">shopping_bag</span> Carrito</a></li>
+          <li><a href="/orders"><span class="material-icons">receipt_long</span> Mis Compras</a></li>
+          <% if (user.nivel === 'admin') { %>
+            <li><a href="/products/create" class="btn-admin"><span class="material-icons">add_circle</span> Crear Producto</a></li>
+          <% } %>
+          <li><span class="user-info"><span class="material-icons">account_circle</span> <%= user.nombre %> (<%= user.nivel %>)</span></li>
+          <li><a href="/logout" class="btn-logout"><span class="material-icons">logout</span> Salir</a></li>
+        </ul>
+      </div>
     </div>
   </nav>
 
@@ -66,5 +73,37 @@
       </div>
     <% } %>
   </main>
+
+  <!-- Ventana de Compra Exitosa -->
+  <div class="success-overlay" id="successOverlay">
+    <div class="success-modal">
+      <div class="success-checkmark">
+        <span class="material-icons">check</span>
+      </div>
+      <h2 class="success-title">¡Compra Exitosa!</h2>
+      <p class="success-message">Tu pedido ha sido procesado correctamente. Recibirás un email de confirmación en breve.</p>
+    </div>
+  </div>
+
+  <script src="/js/mobile-menu.js"></script>
+
+  <script>
+    // Mostrar ventana de compra exitosa si viene de una compra
+    document.addEventListener('DOMContentLoaded', function() {
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get('success') === 'true') {
+        const successOverlay = document.getElementById('successOverlay');
+        successOverlay.classList.add('show');
+        
+        // Ocultar después de 2 segundos
+        setTimeout(() => {
+          successOverlay.classList.remove('show');
+          // Limpiar el parámetro de la URL
+          const newUrl = window.location.pathname;
+          window.history.replaceState({}, document.title, newUrl);
+        }, 2000);
+      }
+    });
+  </script>
 </body>
 </html>

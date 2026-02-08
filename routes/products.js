@@ -102,7 +102,7 @@ router.post('/create', isAdmin, upload.single('imagen'), [
   }
 
   try {
-    const { nombre, codigo, precio, descripcion } = req.body;
+    const { nombre, codigo, precio, descripcion, gallery_image } = req.body;
     
     // Verificar si el código ya existe
     const existingProduct = await Product.findOne({ where: { codigo } });
@@ -113,8 +113,13 @@ router.post('/create', isAdmin, upload.single('imagen'), [
       });
     }
 
-    // Obtener la ruta de la imagen subida
-    const imagen = req.file ? `/uploads/${req.file.filename}` : null;
+    // Determinar qué imagen usar: archivo subido o galería
+    let imagen = null;
+    if (req.file) {
+      imagen = `/uploads/${req.file.filename}`;
+    } else if (gallery_image) {
+      imagen = gallery_image;
+    }
 
     // Crear producto en la base de datos
     await Product.create({ 
@@ -138,6 +143,112 @@ router.post('/create', isAdmin, upload.single('imagen'), [
 // ==========================================
 // VER PRODUCTO POR CÓDIGO
 // ==========================================
+
+// ==========================================
+// EDITAR PRODUCTO (SOLO ADMIN)
+// ==========================================
+
+/**
+ * GET /products/:codigo/edit
+ * Muestra formulario para editar producto
+ * Requiere: Usuario admin
+ */
+router.get('/:codigo/edit', isAdmin, async (req, res) => {
+  try {
+    const product = await Product.findOne({ where: { codigo: req.params.codigo } });
+    
+    if (!product) {
+      return res.status(404).send('Producto no encontrado');
+    }
+    
+    res.render('products/edit', { product, errors: [], formData: product });
+  } catch (error) {
+    console.error('Error al cargar producto para editar:', error);
+    res.status(500).send('Error al cargar producto');
+  }
+});
+
+/**
+ * PUT /products/:codigo/edit
+ * Actualiza un producto existente
+ * Requiere: Usuario admin
+ */
+router.put('/:codigo/edit', isAdmin, upload.single('imagen'), [
+  body('nombre').trim().notEmpty().withMessage('El nombre es requerido'),
+  body('precio').isFloat({ min: 0.01 }).withMessage('El precio debe ser mayor a 0'),
+  body('descripcion').trim()
+], async (req, res) => {
+  const errors = validationResult(req);
+  
+  if (!errors.isEmpty()) {
+    const product = await Product.findOne({ where: { codigo: req.params.codigo } });
+    return res.render('products/edit', { 
+      product,
+      errors: errors.array(), 
+      formData: req.body 
+    });
+  }
+
+  try {
+    const product = await Product.findOne({ where: { codigo: req.params.codigo } });
+    
+    if (!product) {
+      return res.status(404).send('Producto no encontrado');
+    }
+
+    const { nombre, precio, descripcion, gallery_image } = req.body;
+    
+    // Determinar qué imagen usar: archivo subido, galería, o mantener actual
+    let imagen = product.imagen;
+    if (req.file) {
+      imagen = `/uploads/${req.file.filename}`;
+    } else if (gallery_image) {
+      imagen = gallery_image;
+    }
+
+    await product.update({ 
+      nombre, 
+      precio, 
+      descripcion, 
+      imagen 
+    });
+    
+    res.redirect(`/products/${product.codigo}`);
+  } catch (error) {
+    console.error('Error al actualizar producto:', error);
+    const product = await Product.findOne({ where: { codigo: req.params.codigo } });
+    res.render('products/edit', { 
+      product,
+      errors: [{ msg: 'Error al actualizar producto: ' + error.message }], 
+      formData: req.body 
+    });
+  }
+});
+
+// ==========================================
+// ELIMINAR PRODUCTO (SOLO ADMIN)
+// ==========================================
+
+/**
+ * DELETE /products/:codigo
+ * Elimina un producto
+ * Requiere: Usuario admin
+ */
+router.delete('/:codigo', isAdmin, async (req, res) => {
+  try {
+    const product = await Product.findOne({ where: { codigo: req.params.codigo } });
+    
+    if (!product) {
+      return res.status(404).send('Producto no encontrado');
+    }
+
+    await product.destroy();
+    res.redirect('/products');
+  } catch (error) {
+    console.error('Error al eliminar producto:', error);
+    res.status(500).send('Error al eliminar producto');
+  }
+});
 
 /**
  * GET /products/:codigo

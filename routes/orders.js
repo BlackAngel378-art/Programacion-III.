@@ -96,7 +96,7 @@ router.post('/:id/confirm', isAuthenticated, async (req, res) => {
     order.paymentId = 'PAYMENT-' + Date.now();
     await order.save();
 
-    res.redirect('/orders');
+    res.redirect('/orders?success=true');
   } catch (error) {
     console.error(error);
     res.status(500).send('Error al confirmar pago');

@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Editar Producto - Tienda Online</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container">
+      <a href="/" class="logo"><span class="material-icons">shopping_cart</span> Tienda Online</a>
+      
+      <button class="mobile-menu-toggle" onclick="toggleMobileMenu()">
+        <span class="material-icons">menu</span>
+      </button>
+      
+      <div class="nav-wrapper">
+        <ul class="nav-links mobile-hidden" id="navLinks">
+          <li><a href="/products"><span class="material-icons">inventory_2</span> Productos</a></li>
+          <li><a href="/cart"><span class="material-icons">shopping_bag</span> Carrito</a></li>
+          <li><a href="/orders"><span class="material-icons">receipt_long</span> Mis Compras</a></li>
+          <li><a href="/products/create" class="btn-admin"><span class="material-icons">add_circle</span> Crear Producto</a></li>
+          <li><span class="user-info"><span class="material-icons">account_circle</span> <%= user.nombre %> (<%= user.nivel %>)</span></li>
+          <li><a href="/logout" class="btn-logout"><span class="material-icons">logout</span> Salir</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container">
+    <a href="/products/<%= product.codigo %>" class="back-link">
+      <span class="material-icons">arrow_back</span> Volver al producto
+    </a>
+
+    <div class="form-container">
+      <h1><span class="material-icons">edit</span> Editar Producto</h1>
+      
+      <% if (errors.length > 0) { %>
+        <div class="error-messages">
+          <% errors.forEach(error => { %>
+            <div class="error-message">
+              <span class="material-icons">error</span>
+              <%= error.msg %>
+            </div>
+          <% }) %>
+        </div>
+      <% } %>
+
+      <form action="/products/<%= product.codigo %>/edit?_method=PUT" method="POST" enctype="multipart/form-data" class="product-form">
+        <div class="form-group">
+          <label for="nombre">
+            <span class="material-icons">label</span>
+            Nombre del Producto
+          </label>
+          <input type="text" 
+                 id="nombre" 
+                 name="nombre" 
+                 value="<%= formData.nombre || product.nombre %>" 
+                 required
+                 placeholder="Ej: Smartphone Galaxy S24">
+        </div>
+
+        <div class="form-group">
+          <label for="codigo">
+            <span class="material-icons">qr_code</span>
+            Código del Producto
+          </label>
+          <input type="text" 
+                 id="codigo" 
+                 name="codigo" 
+                 value="<%= product.codigo %>" 
+                 readonly
+                 class="readonly-input"
+                 title="El código no se puede modificar">
+          <small class="form-help">El código no se puede modificar una vez creado</small>
+        </div>
+
+        <div class="form-group">
+          <label for="precio">
+            <span class="material-icons">attach_money</span>
+            Precio
+          </label>
+          <input type="number" 
+                 id="precio" 
+                 name="precio" 
+                 value="<%= formData.precio || product.precio %>" 
+                 step="0.01" 
+                 min="0.01" 
+                 required
+                 placeholder="0.00">
+        </div>
+
+        <div class="form-group">
+          <label for="descripcion">
+            <span class="material-icons">description</span>
+            Descripción
+          </label>
+          <textarea id="descripcion" 
+                    name="descripcion" 
+                    rows="4" 
+                    placeholder="Describe las características del producto..."><%= formData.descripcion || product.descripcion || '' %></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="imagen">
+            <span class="material-icons">image</span>
+            Imagen del Producto
+          </label>
+          
+          <% if (product.imagen && product.imagen !== 'https://via.placeholder.com/300x200?text=Sin+Imagen') { %>
+            <div class="current-image">
+              <p>Imagen actual:</p>
+              <img src="<%= product.imagen %>" alt="<%= product.nombre %>" class="preview-image">
+            </div>
+          <% } %>
+          
+          <input type="file" 
+                 id="imagen" 
+                 name="imagen" 
+                 accept="image/*"
+                 class="file-input">
+          <small class="form-help">Formatos permitidos: JPG, PNG, GIF, WebP (máximo 5MB). Deja vacío para mantener la imagen actual.</small>
+        </div>
+
+        <div class="form-group">
+          <label>
+            <span class="material-icons">photo_library</span>
+            O selecciona una imagen de la galería
+          </label>
+          <div class="gallery-grid">
+            <% for (let i = 1; i <= 11; i++) { %>
+              <div class="gallery-item">
+                <input type="radio" 
+                       id="gallery_<%= i %>" 
+                       name="gallery_image" 
+                       value="/productos/producto_<%= i.toString().padStart(2, '0') %>.png"
+                       <% if (product.imagen === `/productos/producto_${i.toString().padStart(2, '0')}.png`) { %>checked<% } %>>
+                <label for="gallery_<%= i %>">
+                  <img src="/productos/producto_<%= i.toString().padStart(2, '0') %>.png" 
+                       alt="Producto <%= i %>" 
+                       class="gallery-image">
+                </label>
+              </div>
+            <% } %>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">
+            <span class="material-icons">save</span>
+            Guardar Cambios
+          </button>
+          <a href="/products/<%= product.codigo %>" class="btn btn-secondary">
+            <span class="material-icons">cancel</span>
+            Cancelar
+          </a>
+        </div>
+      </form>
+    </div>
+  </main>
+
+  <script>
+  <script src="/js/mobile-menu.js"></script>
+
+  <script>
+    // Script para manejar la selección de imagen de galería
+    document.addEventListener('DOMContentLoaded', function() {
+      const galleryRadios = document.querySelectorAll('input[name="gallery_image"]');
+      const fileInput = document.getElementById('imagen');
+      
+      galleryRadios.forEach(radio => {
+        radio.addEventListener('change', function() {
+          if (this.checked) {
+            fileInput.value = '';
+          }
+        });
+      });
+      
+      fileInput.addEventListener('change', function() {
+        if (this.files.length > 0) {
+          galleryRadios.forEach(radio => {
+            radio.checked = false;
+          });
+        }
+      });
+    });
+  </script>
+</body>
+</html>

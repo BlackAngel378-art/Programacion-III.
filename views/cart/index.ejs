@@ -11,16 +11,23 @@
   <nav class="navbar">
     <div class="container">
       <a href="/" class="logo"><span class="material-icons">shopping_cart</span> Tienda Online</a>
-      <ul class="nav-links">
-        <li><a href="/products"><span class="material-icons">inventory_2</span> Productos</a></li>
-        <li><a href="/cart"><span class="material-icons">shopping_bag</span> Carrito</a></li>
-        <li><a href="/orders"><span class="material-icons">receipt_long</span> Mis Compras</a></li>
-        <% if (user.nivel === 'admin') { %>
-          <li><a href="/products/create" class="btn-admin"><span class="material-icons">add_circle</span> Crear Producto</a></li>
-        <% } %>
-        <li><span class="user-info"><span class="material-icons">account_circle</span> <%= user.nombre %> (<%= user.nivel %>)</span></li>
-        <li><a href="/logout" class="btn-logout"><span class="material-icons">logout</span> Salir</a></li>
-      </ul>
+      
+      <button class="mobile-menu-toggle" onclick="toggleMobileMenu()">
+        <span class="material-icons">menu</span>
+      </button>
+      
+      <div class="nav-wrapper">
+        <ul class="nav-links mobile-hidden" id="navLinks">
+          <li><a href="/products"><span class="material-icons">inventory_2</span> Productos</a></li>
+          <li><a href="/cart"><span class="material-icons">shopping_bag</span> Carrito</a></li>
+          <li><a href="/orders"><span class="material-icons">receipt_long</span> Mis Compras</a></li>
+          <% if (user.nivel === 'admin') { %>
+            <li><a href="/products/create" class="btn-admin"><span class="material-icons">add_circle</span> Crear Producto</a></li>
+          <% } %>
+          <li><span class="user-info"><span class="material-icons">account_circle</span> <%= user.nombre %> (<%= user.nivel %>)</span></li>
+          <li><a href="/logout" class="btn-logout"><span class="material-icons">logout</span> Salir</a></li>
+        </ul>
+      </div>
     </div>
   </nav>
 
@@ -49,17 +56,17 @@
           <tbody>
             <% cartItems.forEach(item => { %>
               <tr>
-                <td>
+                <td data-label="Imagen">
                   <img src="<%= item.Product.imagen || 'https://via.placeholder.com/80x80?text=Sin+Imagen' %>" 
                        alt="<%= item.Product.nombre %>" 
                        class="cart-product-image">
                 </td>
-                <td><%= item.Product.nombre %></td>
-                <td><%= item.Product.codigo %></td>
-                <td>$<%= parseFloat(item.Product.precio).toFixed(2) %></td>
-                <td><%= item.cantidad %></td>
-                <td>$<%= (parseFloat(item.Product.precio) * item.cantidad).toFixed(2) %></td>
-                <td>
+                <td data-label="Producto"><%= item.Product.nombre %></td>
+                <td data-label="Código"><%= item.Product.codigo %></td>
+                <td data-label="Precio">$<%= parseFloat(item.Product.precio).toFixed(2) %></td>
+                <td data-label="Cantidad"><%= item.cantidad %></td>
+                <td data-label="Subtotal">$<%= (parseFloat(item.Product.precio) * item.cantidad).toFixed(2) %></td>
+                <td data-label="Acciones">
                   <form action="/cart/remove/<%= item.id %>?_method=DELETE" method="POST" style="display: inline;">
                     <button type="submit" class="btn btn-danger btn-small"><span class="material-icons">delete</span></button>
                   </form>
@@ -86,5 +93,7 @@
       </div>
     <% } %>
   </main>
+
+  <script src="/js/mobile-menu.js"></script>
 </body>
 </html>
