@@ -29,10 +29,14 @@ class MobileMenu {
     this.menuIcon = this.menuToggle?.querySelector('.material-icons');
     
     if (!this.navLinks || !this.menuToggle) {
-      console.warn('Mobile menu elements not found');
+      console.error('Mobile menu elements not found:', {
+        navLinks: !!this.navLinks,
+        menuToggle: !!this.menuToggle
+      });
       return;
     }
     
+    console.log('Mobile menu initialized successfully');
     this.createOverlay();
     this.bindEvents();
   }
@@ -48,7 +52,12 @@ class MobileMenu {
   
   bindEvents() {
     // Toggle del menú
-    this.menuToggle.addEventListener('click', () => this.toggle());
+    this.menuToggle.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      console.log('Menu toggle clicked');
+      this.toggle();
+    });
     
     // Cerrar menú al hacer clic en enlaces
     this.navLinks.querySelectorAll('a').forEach(link => {
@@ -76,6 +85,7 @@ class MobileMenu {
   }
   
   toggle() {
+    console.log('Toggle called, current state:', this.isOpen() ? 'open' : 'closed');
     if (this.isOpen()) {
       this.close();
     } else {
@@ -84,6 +94,7 @@ class MobileMenu {
   }
   
   open() {
+    console.log('Opening menu');
     this.navLinks.classList.remove('mobile-hidden');
     this.navLinks.classList.add('mobile-visible');
     this.menuToggle.classList.add('active');
@@ -102,6 +113,7 @@ class MobileMenu {
   }
   
   close() {
+    console.log('Closing menu');
     this.navLinks.classList.remove('mobile-visible');
     this.navLinks.classList.add('mobile-hidden');
     this.menuToggle.classList.remove('active');
