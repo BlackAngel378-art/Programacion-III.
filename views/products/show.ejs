@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= product.nombre %> - Tienda Online</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container">
+      <a href="/" class="logo"><span class="material-icons">shopping_cart</span> Tienda Online</a>
+      
+      <button class="mobile-menu-toggle" onclick="toggleMobileMenu()">
+        <span class="material-icons">menu</span>
+      </button>
+      
+      <div class="nav-wrapper">
+        <ul class="nav-links mobile-hidden" id="navLinks">
+          <li><a href="/products"><span class="material-icons">inventory_2</span> Productos</a></li>
+          <li><a href="/cart"><span class="material-icons">shopping_bag</span> Carrito</a></li>
+          <li><a href="/orders"><span class="material-icons">receipt_long</span> Mis Compras</a></li>
+          <% if (user.nivel === 'admin') { %>
+            <li><a href="/products/create" class="btn-admin"><span class="material-icons">add_circle</span> Crear Producto</a></li>
+          <% } %>
+          <li><span class="user-info"><span class="material-icons">account_circle</span> <%= user.nombre %> (<%= user.nivel %>)</span></li>
+          <li><a href="/logout" class="btn-logout"><span class="material-icons">logout</span> Salir</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container">
+    <a href="/products" class="back-link">
+      <span class="material-icons">arrow_back</span> Volver a productos
+    </a>
+    
+    <div class="product-detail-wrapper">
+      <!-- Columna Izquierda: Imagen -->
+      <div class="product-detail-left">
+        <div class="product-image-container">
+          <img src="<%= product.imagen || 'https://via.placeholder.com/600x400?text=Sin+Imagen' %>" 
+               alt="<%= product.nombre %>" 
+               class="product-detail-image">
+        </div>
+      </div>
+
+      <!-- Columna Derecha: Información -->
+      <div class="product-detail-right">
+        <div class="product-header-section">
+          <span class="product-badge">
+            <span class="material-icons">verified</span>
+            En Stock
+          </span>
+          <h1 class="product-title"><%= product.nombre %></h1>
+          <p class="product-code-detail">
+            <span class="material-icons">qr_code</span>
+            Código: <%= product.codigo %>
+          </p>
+        </div>
+
+        <div class="product-price-box">
+          <span class="price-label">Precio</span>
+          <span class="product-price-large">$<%= parseFloat(product.precio).toFixed(2) %></span>
+          <span class="price-tax">IVA incluido</span>
+        </div>
+
+        <div class="product-description-section">
+          <h3>
+            <span class="material-icons">description</span>
+            Descripción del Producto
+          </h3>
+          <p class="product-description-text">
+            <%= product.descripcion || 'Sin descripción disponible' %>
+          </p>
+        </div>
+
+        <div class="product-features">
+          <div class="feature-item">
+            <span class="material-icons">local_shipping</span>
+            <div>
+              <strong>Envío Gratis</strong>
+              <p>En compras mayores a $500</p>
+            </div>
+          </div>
+          <div class="feature-item">
+            <span class="material-icons">verified_user</span>
+            <div>
+              <strong>Compra Segura</strong>
+              <p>Pago 100% protegido</p>
+            </div>
+          </div>
+          <div class="feature-item">
+            <span class="material-icons">support_agent</span>
+            <div>
+              <strong>Soporte 24/7</strong>
+              <p>Atención al cliente</p>
+            </div>
+          </div>
+        </div>
+
+        <form action="/cart/add/<%= product.id %>" method="POST" class="add-to-cart-section">
+          <div class="quantity-selector">
+            <label for="cantidad">
+              <span class="material-icons">shopping_cart</span>
+              Cantidad
+            </label>
+            <div class="quantity-input-wrapper">
+              <input type="number" 
+                     id="cantidad" 
+                     name="cantidad" 
+                     value="1" 
+                     min="1" 
+                     max="99"
+                     required>
+            </div>
+          </div>
+          
+          <button type="submit" class="btn btn-primary btn-large btn-add-cart">
+            <span class="material-icons">add_shopping_cart</span>
+            Agregar al Carrito
+          </button>
+        </form>
+
+        <% if (user.nivel === 'admin') { %>
+          <div class="admin-actions">
+            <h3>
+              <span class="material-icons">admin_panel_settings</span>
+              Acciones de Administrador
+            </h3>
+            <div class="admin-buttons">
+              <a href="/products/<%= product.codigo %>/edit" class="btn btn-warning">
+                <span class="material-icons">edit</span>
+                Editar Producto
+              </a>
+              <form action="/products/<%= product.codigo %>?_method=DELETE" method="POST" style="display: inline;" onsubmit="return confirm('¿Estás seguro de que quieres eliminar este producto?')">
+                <button type="submit" class="btn btn-danger">
+                  <span class="material-icons">delete</span>
+                  Eliminar Producto
+                </button>
+              </form>
+            </div>
+          </div>
+        <% } %>
+      </div>
+    </div>
+  </main>
+
+  <script src="/js/mobile-menu.js"></script>
+</body>
+</html>

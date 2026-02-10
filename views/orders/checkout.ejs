@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checkout - Tienda Online</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container">
+      <a href="/" class="logo"><span class="material-icons">shopping_cart</span> Tienda Online</a>
+      <ul class="nav-links">
+        <li><a href="/products"><span class="material-icons">inventory_2</span> Productos</a></li>
+        <li><a href="/cart"><span class="material-icons">shopping_bag</span> Carrito</a></li>
+        <li><a href="/orders"><span class="material-icons">receipt_long</span> Mis Compras</a></li>
+        <% if (user.nivel === 'admin') { %>
+          <li><a href="/products/create" class="btn-admin"><span class="material-icons">add_circle</span> Crear Producto</a></li>
+        <% } %>
+        <li><span class="user-info"><span class="material-icons">account_circle</span> <%= user.nombre %> (<%= user.nivel %>)</span></li>
+        <li><a href="/logout" class="btn-logout"><span class="material-icons">logout</span> Salir</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main class="container">
+    <div class="checkout-wrapper">
+      <div class="checkout-left">
+        <h1><span class="material-icons">payment</span> Información de Pago</h1>
+        
+        <form action="/orders/<%= order.id %>/confirm" method="POST" class="payment-form">
+          <!-- Información de Contacto -->
+          <div class="form-section">
+            <h3>Información de Contacto</h3>
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input type="email" id="email" name="email" value="<%= user.email %>" required>
+            </div>
+          </div>
+
+          <!-- Información de Envío -->
+          <div class="form-section">
+            <h3>Dirección de Envío</h3>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="nombre">Nombre Completo</label>
+                <input type="text" id="nombre" name="nombre" value="<%= user.nombre %>" required>
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label for="direccion">Dirección</label>
+              <input type="text" id="direccion" name="direccion" placeholder="Calle y número" required>
+            </div>
+            
+            <div class="form-row">
+              <div class="form-group">
+                <label for="ciudad">Ciudad</label>
+                <input type="text" id="ciudad" name="ciudad" required>
+              </div>
+              <div class="form-group">
+                <label for="codigo_postal">Código Postal</label>
+                <input type="text" id="codigo_postal" name="codigo_postal" required>
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label for="estado">Estado</label>
+              <select id="estado" name="estado" required>
+                <option value="">Seleccione un estado</option>
+                <option value="Amazonas">Amazonas</option>
+                <option value="Anzoátegui">Anzoátegui</option>
+                <option value="Apure">Apure</option>
+                <option value="Aragua">Aragua</option>
+                <option value="Barinas">Barinas</option>
+                <option value="Bolívar">Bolívar</option>
+                <option value="Carabobo">Carabobo</option>
+                <option value="Cojedes">Cojedes</option>
+                <option value="Delta Amacuro">Delta Amacuro</option>
+                <option value="Distrito Capital">Distrito Capital</option>
+                <option value="Falcón">Falcón</option>
+                <option value="Guárico">Guárico</option>
+                <option value="Lara">Lara</option>
+                <option value="Mérida">Mérida</option>
+                <option value="Miranda">Miranda</option>
+                <option value="Monagas">Monagas</option>
+                <option value="Nueva Esparta">Nueva Esparta</option>
+                <option value="Portuguesa">Portuguesa</option>
+                <option value="Sucre">Sucre</option>
+                <option value="Táchira">Táchira</option>
+                <option value="Trujillo">Trujillo</option>
+                <option value="Vargas">Vargas</option>
+                <option value="Yaracuy">Yaracuy</option>
+                <option value="Zulia">Zulia</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Información de Pago -->
+          <div class="form-section">
+            <h3>Información de Tarjeta</h3>
+            <div class="form-group">
+              <label for="card_number">Número de Tarjeta</label>
+              <div class="card-input">
+                <input type="text" id="card_number" name="card_number" placeholder="1234 5678 9012 3456" maxlength="19" required>
+                <div class="card-icons">
+                  <span class="material-icons">credit_card</span>
+                </div>
+              </div>
+            </div>
+            
+            <div class="form-row">
+              <div class="form-group">
+                <label for="expiry">Fecha de Expiración</label>
+                <input type="text" id="expiry" name="expiry" placeholder="MM / AA" maxlength="7" required>
+              </div>
+              <div class="form-group">
+                <label for="cvc">CVC</label>
+                <input type="text" id="cvc" name="cvc" placeholder="123" maxlength="4" required>
+              </div>
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-large btn-block">
+            <span class="material-icons">lock</span>
+            Pagar $<%= parseFloat(order.total).toFixed(2) %>
+          </button>
+          
+          <a href="/cart" class="btn btn-secondary btn-block">
+            <span class="material-icons">arrow_back</span>
+            Volver al Carrito
+          </a>
+          
+          <p class="secure-payment">
+            <span class="material-icons">verified_user</span>
+            Pago seguro y encriptado
+          </p>
+        </form>
+      </div>
+
+      <div class="checkout-right">
+        <div class="order-summary-card">
+          <h2>Resumen del Pedido</h2>
+          
+          <div class="order-items">
+            <% order.OrderItems.forEach(item => { %>
+              <div class="order-item">
+                <div class="item-info">
+                  <span class="item-name"><%= item.nombre %></span>
+                  <span class="item-quantity">x <%= item.cantidad %></span>
+                </div>
+                <span class="item-price">$<%= (parseFloat(item.precio) * item.cantidad).toFixed(2) %></span>
+              </div>
+            <% }) %>
+          </div>
+          
+          <div class="order-totals">
+            <div class="total-row">
+              <span>Subtotal</span>
+              <span>$<%= parseFloat(order.total).toFixed(2) %></span>
+            </div>
+            <div class="total-row">
+              <span>Envío</span>
+              <span>Gratis</span>
+            </div>
+            <div class="total-row total-final">
+              <span>Total</span>
+              <span>$<%= parseFloat(order.total).toFixed(2) %></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</body>
+</html>
