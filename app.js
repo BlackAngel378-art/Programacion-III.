@@ -78,81 +78,81 @@ db.sync().then(async () => {
   if (productCount === 0) {
     const productosDefault = [
       {
-        nombre: 'Jugo del Valle',
+        nombre: 'Samsung S26 Ultra',
         codigo: 'PROD001',
-        precio: 25.50,
-        descripcion: 'Jugo del Valle sabor naranja 1L, 100% natural sin conservadores',
-        imagen: '/productos/producto_01.png'
+        precio: 25999.00,
+        descripcion: 'Samsung Galaxy S26 Ultra, pantalla AMOLED 6.8", cámara 200MP, 512GB',
+        imagen: '/productos/s26 utra.jpeg'
       },
       {
-        nombre: 'Gomitas con Chile',
+        nombre: 'Laptop Gaming',
         codigo: 'PROD002',
-        precio: 15.00,
-        descripcion: 'Gomitas enchiladas sabor tamarindo, picante y dulce',
-        imagen: '/productos/producto_02.png'
+        precio: 18500.00,
+        descripcion: 'Laptop gaming de alto rendimiento, Intel i7, RTX 4060, 16GB RAM',
+        imagen: '/productos/lapto.jpeg'
       },
       {
-        nombre: 'Mangomita',
+        nombre: 'Televisor 4K',
         codigo: 'PROD003',
-        precio: 18.50,
-        descripcion: 'Dulce de mango enchilado con chamoy, sabor intenso',
-        imagen: '/productos/producto_03.png'
+        precio: 12999.00,
+        descripcion: 'Smart TV 4K UHD 55", HDR, sistema operativo Android TV',
+        imagen: '/productos/4k televisor.jpeg'
       },
       {
-        nombre: 'Coca Cola de Lata',
+        nombre: 'PlayStation 4',
         codigo: 'PROD004',
-        precio: 12.00,
-        descripcion: 'Coca Cola lata 355ml, refrescante y fría',
-        imagen: '/productos/producto_04.png'
+        precio: 6500.00,
+        descripcion: 'Consola PlayStation 4 Slim 1TB, incluye control DualShock 4',
+        imagen: '/productos/play 4.jpeg'
       },
       {
-        nombre: 'Pistachos Colonia Pixi',
+        nombre: 'Tablet Pro',
         codigo: 'PROD005',
-        precio: 45.00,
-        descripcion: 'Pistachos naturales tostados y salados, 100g',
-        imagen: '/productos/producto_05.png'
+        precio: 8999.00,
+        descripcion: 'Tablet profesional 11", procesador octa-core, 256GB, incluye stylus',
+        imagen: '/productos/tablet.jpeg'
       },
       {
-        nombre: 'Pistachos de Chocolate',
+        nombre: 'Cámara Digital',
         codigo: 'PROD006',
-        precio: 55.00,
-        descripcion: 'Pistachos cubiertos con chocolate oscuro premium',
-        imagen: '/productos/producto_06.png'
+        precio: 15500.00,
+        descripcion: 'Cámara digital profesional 24MP, lente 18-55mm, grabación 4K',
+        imagen: '/productos/camara.jpeg'
       },
       {
-        nombre: 'Vino de Naranja',
+        nombre: 'Teclado Mecánico RGB',
         codigo: 'PROD007',
-        precio: 120.00,
-        descripcion: 'Vino de naranja artesanal, dulce y aromático 750ml',
-        imagen: '/productos/producto_07.png'
+        precio: 1899.00,
+        descripcion: 'Teclado mecánico gaming, switches azules, iluminación RGB personalizable',
+        imagen: '/productos/teclado.jpeg'
       },
       {
-        nombre: 'Mayonesa La Costeña Mediana',
+        nombre: 'Mouse Gaming',
         codigo: 'PROD008',
-        precio: 32.00,
-        descripcion: 'Mayonesa La Costeña 380g, cremosa y deliciosa',
-        imagen: '/productos/producto_08.png'
+        precio: 899.00,
+        descripcion: 'Mouse gaming óptico 16000 DPI, 8 botones programables, RGB',
+        imagen: '/productos/raton.jpeg'
       },
       {
-        nombre: 'Mayonesa La Costeña Grande',
+        nombre: 'Audífonos Bluetooth',
         codigo: 'PROD009',
-        precio: 58.00,
-        descripcion: 'Mayonesa La Costeña 880g, presentación familiar',
-        imagen: '/productos/producto_09.png'
+        precio: 2499.00,
+        descripcion: 'Audífonos inalámbricos con cancelación de ruido, batería 30hrs',
+        imagen: '/productos/audifonos.jpeg'
       },
       {
-        nombre: 'Salsa Valentina',
+        nombre: 'Smartwatch',
         codigo: 'PROD010',
-        precio: 22.00,
-        descripcion: 'Salsa picante Valentina 370ml, la original',
-        imagen: '/productos/producto_10.png'
+        precio: 3999.00,
+        descripcion: 'Reloj inteligente con monitor de salud, GPS, resistente al agua',
+        imagen: '/productos/el relop.jpeg'
       },
       {
-        nombre: 'Churrumais',
+        nombre: 'Bocina JBL',
         codigo: 'PROD011',
-        precio: 16.50,
-        descripcion: 'Botana Churrumais sabor chile y limón 62g',
-        imagen: '/productos/producto_11.png'
+        precio: 1899.00,
+        descripcion: 'Bocina portátil Bluetooth JBL, resistente al agua, 12hrs batería',
+        imagen: '/productos/UBL.jpeg'
       }
     ];
     
